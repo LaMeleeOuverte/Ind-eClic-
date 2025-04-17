@@ -31,7 +31,7 @@ const optionsContainer = document.querySelector('.options');
 if (!localStorage.getItem('quizResponses')) {
     localStorage.setItem('quizResponses', JSON.stringify({}));
 }
-
+    
 // Ajouter les événements click sur les options
 document.querySelectorAll('.option').forEach(option => {
     option.addEventListener('click', function() {
@@ -60,7 +60,7 @@ function updateQuestion() {
     
     // Mettre à jour la question
     questionContainer.textContent = question.question;
-    
+
     // Mettre à jour les options
     const optionElements = document.querySelectorAll('.option');
     optionElements.forEach((optionElement, index) => {

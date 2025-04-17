@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Idée Clic' - L'impulsion qui change tout</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
     <div class="container">
@@ -12,8 +13,11 @@
             <div class="logo">
                 <a href="index.html"><img class="logo-icon" src="img/logo-n.png" alt="Idée Clic" /></a>
             </div>
+            <button class="menu-toggle" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
             <nav>
-                <ul>
+                <ul id="navMenu">
                     <li class="menu-deroulant">
                         <a href="#">Formules</a>
                         <ul class="sous-menu">
@@ -70,6 +74,26 @@
         document.addEventListener('DOMContentLoaded', function() {
             initialiserCompteur();
             animerTitre();
+            
+            // Fonction pour le menu hamburger
+            const menuToggle = document.getElementById('menuToggle');
+            const navMenu = document.getElementById('navMenu');
+            
+            if (menuToggle && navMenu) {
+                menuToggle.addEventListener('click', function() {
+                    navMenu.classList.toggle('show');
+                });
+            }
+            
+            // Fermer le menu en cliquant sur un lien
+            const navLinks = document.querySelectorAll('nav ul li a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth <= 768) {
+                        navMenu.classList.remove('show');
+                    }
+                });
+            });
         });
 
         // Fonction pour animer le titre caractère par caractère
