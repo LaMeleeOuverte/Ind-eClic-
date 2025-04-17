@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz - Résultats</title>
+    <link rel="stylesheet" href="jeu.css">
+</head>
+<body>
+    <div class="quiz-container">
+        <div class="quiz-box">
+            <div class="question-container">
+                <div class="logo">
+                    <img class="logo-icon" src="img/logo-n.png" alt="Idée Clic" />
+                </div>
+                <h2>Résumé de tes réponses</h2>
+                <div id="responses-summary" class="responses-summary">
+                    <!-- Les réponses seront insérées ici -->
+                </div>
+                <div id="profile-analysis" class="profile-analysis">
+                    <!-- Le profil sera inséré ici -->
+                </div>
+                <div class="nav-buttons">
+                    <button onclick="resetQuiz()" class="nav-btn">Recommencer le quiz</button>
+                    <button onclick="popup()" class="nav-btn">En savoir plus sur ton profil</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="emailPopup" class="popup">
+        <div class="popup-content">
+            <span class="close-btn" onclick="fermerPopup()">&times;</span>
+            <h2>Recevez votre profil détaillé</h2>
+            <form id="emailForm">
+                <div class="form-group">
+                    <label for="email">Votre adresse email :</label>
+                    <input type="email" id="email" name="email" required placeholder="exemple@email.com">
+                </div>
+                <button type="submit" class="submit-btn">Envoyer</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Vérifier si on a des réponses stockées
+        if (!localStorage.getItem('quizResponses')) {
+            window.location.href = 'jeu.html';
+        }
+
+        // Récupérer et afficher les réponses
+        const responses = JSON.parse(localStorage.getItem('quizResponses'));
+        const summaryDiv = document.getElementById('responses-summary');
+        const profileDiv = document.getElementById('profile-analysis');
+        
+        // Définir les questions
+        const questions = {
+            question1: "Quand tu penses à ton avenir pro, tu te dis plutôt :",
+            question2: "Quand tu parles de toi en entretien ou en public ?",
+            question3: "Quand tu penses à ton projet ?",
+            question4: "Comment préfères-tu être accompagné(e) ?"
+        };
+        
+        // Définir les réponses possibles
+        const answerTexts = {
+            question1: {
+                A: "Je n'ai aucune idée de ce que je veux faire",
+                B: "J'ai quelques pistes, mais rien de clair",
+                C: "Je sais ce que je veux, mais je ne sais pas par où commencer",
+                D: "J'ai un plan, je veux juste passer à l'action"
+            },
+            question2: {
+                A: "J'ai du mal à me valoriser",
+                B: "Je parle de moi mais je doute de ce que je dis",
+                C: "Je suis à l'aise, mais je veux améliorer mon impact",
+                D: "Je me sens confiant·e et percutant·e"
+            },
+            question3: {
+                A: "J'attends un déclic",
+                B: "J'ai besoin d'aide pour clarifier mes objectifs",
+                C: "Je veux structurer un vrai plan",
+                D: "Je cherche des contacts et des opportunités concrètes"
+            },
+            question4: {
+                A: "En petit groupe, pour échanger",
+                B: "En individuel, pour aller à mon rythme",
+                C: "Un mix des deux",
+                D: "À distance, quand je veux"
+            }
+        };
+
+        // Créer le résumé HTML
+        let summaryHTML = '';
+        for (const [questionId, question] of Object.entries(questions)) {
+            const answer = responses[questionId];
+            const answerText = answerTexts[questionId][answer];
+            summaryHTML += `
+                <div class="response-item">
+                    <h3>${question}</h3>
+                    <p>Ta réponse : ${answerText}</p>
+                </div>
+            `;
+        }
+        summaryDiv.innerHTML = summaryHTML;
+
+        // Compter les réponses
+        const answerCounts = {
+            A: 0,
+            B: 0,
+            C: 0,
+            D: 0
+        };
+
+        Object.values(responses).forEach(answer => {
+            answerCounts[answer]++;
+        });
+
+        // Trouver la réponse majoritaire
+        let maxCount = 0;
+        let majorityAnswer = '';
+        
+        for (const [answer, count] of Object.entries(answerCounts)) {
+            if (count > maxCount) {
+                maxCount = count;
+                majorityAnswer = answer;
+            }
+        }
+
+        // Définir les profils
+        const profiles = {
+            A: {
+                title: "Le·la Curieux·se en recherche de repères",
+                description: "Tu es dans une période de flou, ce qui est totalement normal. Tu as besoin de te poser les bonnes questions, de découvrir ce qui te passionne vraiment et d'explorer différentes pistes sans pression. Ton premier levier : apprendre à mieux te connaître, sans chercher une réponse immédiate.",
+                needs: "temps pour toi, échanges avec des personnes inspirantes, outils d'introspection simples, environnement bienveillant pour oser réfléchir librement."
+            },
+            B: {
+                title: "Le·la Bâtisseur·se de clarté",
+                description: "Tu es à un moment où tu veux comprendre où tu vas. Tu n'es plus dans l'incertitude totale, mais il te manque une structure pour avancer. Tu as des idées, mais tu ne sais pas encore si elles sont alignées avec toi.",
+                needs: "trier tes envies, faire le point sur tes compétences, formuler des objectifs concrets, et peut-être tester des choses avant de décider."
+            },
+            C: {
+                title: "Le·la Stratège en devenir",
+                description: "Tu es déterminé·e et tu sais ce que tu veux, mais tu as besoin d'un cadre clair pour passer à l'étape suivante. Tu veux que les choses avancent concrètement, de manière organisée.",
+                needs: "plan d'action, feedback extérieur, méthodologie pour ne pas t'éparpiller, et une dynamique de progression pas à pas."
+            },
+            D: {
+                title: "Le·la Acteur·rice prêt·e à passer à l'action",
+                description: "Tu es déjà dans le mouvement, tu sais ce que tu veux et tu cherches à activer les bons leviers pour atteindre tes objectifs. Ce qu'il te faut maintenant, c'est du réseau, des opportunités, et des outils qui te font gagner du temps.",
+                needs: "accès à des contacts clés, moyens de valoriser ce que tu sais déjà faire, soutien ponctuel pour garder ta motivation et ajuster ton plan."
+            }
+        };
+
+        // Afficher le profil
+        const profile = profiles[majorityAnswer];
+        profileDiv.innerHTML = `
+            <h2>Ton profil</h2>
+            <div class="profile-content">
+                <h3>${profile.title}</h3>
+                <p>${profile.description}</p>
+                <p><strong>Ce dont tu as besoin :</strong> ${profile.needs}</p>
+            </div>
+        `;
+
+        // Fonction pour recommencer le quiz
+        function resetQuiz() {
+            localStorage.removeItem('quizResponses');
+            window.location.href = 'jeu.html';
+        }
+
+        function popup() {
+            document.getElementById('emailPopup').style.display = 'block';
+        }
+
+        function fermerPopup() {
+            document.getElementById('emailPopup').style.display = 'none';
+        }
+
+        // Gérer la soumission du formulaire
+        document.getElementById('emailForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+
+            fetch('mail.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `email=${encodeURIComponent(email)}`
+            })
+            .then(res => res.json())
+            .then(data => {
+                alert(data.message);
+                fermerPopup();
+            })
+            .catch(err => {
+                console.error(err);
+                alert("Erreur : impossible d'enregistrer l'email.");
+            });
+        });
+
+        // Fermer la popup si on clique en dehors
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('emailPopup')) {
+                fermerPopup();
+            }
+        }
+    </script>
+    <style>
+        .responses-summary {
+            text-align: left;
+            margin: 15px 0;
+        }
+        .response-item {
+            margin-bottom: 15px;
+            padding: 12px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+        .response-item h3 {
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+        .response-item p {
+            color: #666;
+            margin: 0;
+            font-size: 14px;
+        }
+        .profile-analysis {
+            margin-top: 25px;
+            text-align: left;
+        }
+        .profile-content {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .profile-content h3 {
+            color: #333;
+            margin-bottom: 12px;
+            font-size: 18px;
+        }
+        .profile-content p {
+            color: #555;
+            line-height: 1.4;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+        .nav-buttons {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .quiz-container {
+            width: 90%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .quiz-box {
+            padding: 20px;
+        }
+        h2 {
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+        .popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .popup-content {
+            position: relative;
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .close-btn {
+            position: absolute;
+            right: 20px;
+            top: 10px;
+            font-size: 28px;
+            cursor: pointer;
+        }
+
+        .form-group {
+            margin: 20px 0;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .submit-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+        }
+
+        .submit-btn:hover {
+            background-color: #45a049;
+        }
+    </style>
+    
+</body>
+</html> 
