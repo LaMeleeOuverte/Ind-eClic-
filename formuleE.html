@@ -6,6 +6,7 @@
     <title>Idée Clic' - Formules écoles</title>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="formationEcole.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
     <div class="container">
@@ -13,16 +14,19 @@
             <div class="logo">
                 <a href="index.html"><img class="logo-icon" src="img/logo-n.png" alt="Idée Clic" /></a>
             </div>
+            <button class="menu-toggle" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
             <nav>
-                <ul>
+                <ul id="navMenu">
                     <li class="menu-deroulant">
-                        <a href="#">Formules</a>
+                        <a href="#" class="menu-trigger">Formules <i class="fas fa-chevron-down"></i></a>
                         <ul class="sous-menu">
                             <li><a href="formuleP.html">Formules parents</a></li>
-                            <li><a href="formuleE.html">Formules écoles</a></li>
+                            <li><a href="formuleE.html">Formules ecoles</a></li>
                         </ul>
                     </li>
-                    <li><a href="#">Témoignages</a></li>
+                    <li><a href="#">Temoignages </a></li>
                     <li><a href="aPropos.html">À propos</a></li>
                     <li><a href="#">Contact</a></li>
                 </ul>
@@ -65,5 +69,68 @@
             </div>
         </main>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Fonction pour le menu hamburger
+            const menuToggle = document.getElementById('menuToggle');
+            const navMenu = document.getElementById('navMenu');
+            
+            if (menuToggle && navMenu) {
+                menuToggle.addEventListener('click', function() {
+                    navMenu.classList.toggle('show');
+                });
+            }
+            
+            // Gestion des sous-menus au clic
+            const menuTriggers = document.querySelectorAll('.menu-trigger');
+            
+            menuTriggers.forEach(trigger => {
+                trigger.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const parent = this.parentElement;
+                    const subMenu = parent.querySelector('.sous-menu');
+                    
+                    // Fermer tous les autres sous-menus
+                    document.querySelectorAll('.sous-menu').forEach(menu => {
+                        if (menu !== subMenu) {
+                            menu.classList.remove('active');
+                        }
+                    });
+                    
+                    // Basculer l'affichage du sous-menu actuel
+                    subMenu.classList.toggle('active');
+                });
+            });
+            
+            // Fermer le menu en cliquant sur un lien
+            const navLinks = document.querySelectorAll('nav ul li a:not(.menu-trigger)');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth <= 768) {
+                        navMenu.classList.remove('show');
+                    }
+                });
+            });
+            
+            // Fermer le menu et les sous-menus lorsque la fenêtre est redimensionnée
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 768) {
+                    document.querySelectorAll('.sous-menu').forEach(menu => {
+                        menu.classList.remove('active');
+                    });
+                }
+            });
+            
+            // Fermer les sous-menus quand on clique ailleurs sur la page
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.menu-deroulant')) {
+                    document.querySelectorAll('.sous-menu').forEach(menu => {
+                        menu.classList.remove('active');
+                    });
+                }
+            });
+        });
+    </script>
 </body>
 </html>

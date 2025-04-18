@@ -16,7 +16,7 @@ body {
 }
 
 .container {
-    max-width: 1300px;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
 }
@@ -78,8 +78,19 @@ nav ul li a {
     z-index: 100;
 }
 
+/* Suppression du comportement de survol */
 .menu-deroulant:hover .sous-menu {
-    display: block;
+    display: none;
+}
+
+/* Faire en sorte que le sous-menu ne s'affiche pas par défaut */
+.sous-menu {
+    display: none !important;
+}
+
+/* Afficher uniquement quand la classe active est présente */
+.sous-menu.active {
+    display: block !important;
 }
 
 .sous-menu li {
