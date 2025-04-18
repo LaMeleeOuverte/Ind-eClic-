@@ -19,13 +19,12 @@ body {
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 1185px;
     margin: 0 auto;
     padding: 0 20px;
     width: 100%;
 }
 
-/* Header uniforme - aligné avec styles.css */
 header {
     display: flex;
     justify-content: space-between;
@@ -136,6 +135,7 @@ h1 {
     line-height: 1.3;
     margin-left: auto;
     margin-right: auto;
+    margin-bottom: 50px;
 }
 
 h1:after {
