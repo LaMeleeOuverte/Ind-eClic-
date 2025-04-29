@@ -39,29 +39,21 @@
         </div>
     </div>
     <script>
-        // Vérifier si on a déjà des réponses stockées
         if (!localStorage.getItem('quizResponses')) {
-            // Si non, rediriger vers la première page
             window.location.href = 'jeu.html';
         }
 
-        // Ajouter les événements click sur les options
         document.querySelectorAll('.option').forEach(option => {
             option.addEventListener('click', function() {
-                // Ajouter la classe selected à l'option cliquée
                 this.classList.add('selected');
                 
-                // Récupérer la réponse
                 const answer = this.getAttribute('data-answer');
                 
-                // Stocker la réponse
                 const responses = JSON.parse(localStorage.getItem('quizResponses'));
                 responses['question2'] = answer;
                 localStorage.setItem('quizResponses', JSON.stringify(responses));
                 
-                // Attendre un peu pour montrer la sélection
                 setTimeout(() => {
-                    // Rediriger vers la page suivante
                     window.location.href = 'jeu3.html';
                 }, 500);
             });

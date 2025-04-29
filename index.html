@@ -53,15 +53,12 @@
         </main>
     </div>
 
-    <!-- Ajoutez ce HTML où vous souhaitez afficher le compteur -->
     <div class="compteur-container">
         <p class="compteur-texte">Nombre de visites : <span id="nombre-visites">550</span></p>
     </div>
 
     <script>
-        // Fonction pour gérer le compteur de visites
         function initialiserCompteur() {
-            // Utiliser un nouveau nom de variable pour éviter les conflits avec l'ancien compteur
             let compteurVisites = localStorage.getItem('nombreVisitesV2');
             
             if (compteurVisites === null) {
@@ -81,7 +78,6 @@
             initialiserCompteur();
             animerTitre();
             
-            // Fonction pour le menu hamburger
             const menuToggle = document.getElementById('menuToggle');
             const navMenu = document.getElementById('navMenu');
             
@@ -91,7 +87,6 @@
                 });
             }
             
-            // Gestion des sous-menus au clic
             const menuTriggers = document.querySelectorAll('.menu-trigger');
             
             menuTriggers.forEach(trigger => {
@@ -100,19 +95,16 @@
                     const parent = this.parentElement;
                     const subMenu = parent.querySelector('.sous-menu');
                     
-                    // Fermer tous les autres sous-menus
                     document.querySelectorAll('.sous-menu').forEach(menu => {
                         if (menu !== subMenu) {
                             menu.classList.remove('active');
                         }
                     });
                     
-                    // Basculer l'affichage du sous-menu actuel
                     subMenu.classList.toggle('active');
                 });
             });
             
-            // Fermer le menu en cliquant sur un lien
             const navLinks = document.querySelectorAll('nav ul li a:not(.menu-trigger)');
             navLinks.forEach(link => {
                 link.addEventListener('click', function() {
@@ -122,7 +114,6 @@
                 });
             });
             
-            // Fermer le menu et les sous-menus lorsque la fenêtre est redimensionnée
             window.addEventListener('resize', function() {
                 if (window.innerWidth > 768) {
                     document.querySelectorAll('.sous-menu').forEach(menu => {
@@ -131,7 +122,6 @@
                 }
             });
             
-            // Fermer les sous-menus quand on clique ailleurs sur la page
             document.addEventListener('click', function(e) {
                 if (!e.target.closest('.menu-deroulant')) {
                     document.querySelectorAll('.sous-menu').forEach(menu => {
@@ -141,25 +131,19 @@
             });
         });
 
-        // Fonction pour animer le titre caractère par caractère
         function animerTitre() {
             const titreElement = document.getElementById('main-title');
             const texteOriginal = titreElement.innerHTML;
             
-            // Mesurer la hauteur du titre avant de le vider
             const hauteurOriginale = titreElement.offsetHeight;
             
-            // Appliquer une hauteur minimale au titre pour éviter le déplacement des éléments suivants
             titreElement.style.minHeight = hauteurOriginale + 'px';
             
-            // Cacher le titre original
             titreElement.innerHTML = '';
             
-            // Convertir le HTML en éléments temporaires pour conserver les balises
             const div = document.createElement('div');
             div.innerHTML = texteOriginal;
             
-            // Récupérer le texte avec les balises
             const texteAvecBalises = div.innerHTML;
             
             let i = 0;
@@ -167,10 +151,8 @@
             let resultat = '';
             let baliseTemp = '';
             
-            // Fonction pour afficher progressivement chaque caractère
             function afficherCaractere() {
                 if (i < texteAvecBalises.length) {
-                    // Si c'est une balise HTML, on la traite différemment
                     if (texteAvecBalises[i] === '<') {
                         estDansBalise = true;
                         baliseTemp += texteAvecBalises[i];
@@ -182,17 +164,15 @@
                     } else if (estDansBalise) {
                         baliseTemp += texteAvecBalises[i];
                     } else {
-                        // C'est un caractère normal, on l'ajoute avec un délai
                         resultat += texteAvecBalises[i];
                         titreElement.innerHTML = resultat;
                     }
                     
                     i++;
-                    setTimeout(afficherCaractere, 100); // Vitesse d'affichage des caractères (100ms)
+                    setTimeout(afficherCaractere, 100); 
                 }
             }
             
-            // Démarrer l'animation
             afficherCaractere();
         }
     </script>
